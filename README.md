@@ -218,7 +218,6 @@ python3 manage.py runserver
 ![Demo Screenshot](Showcase/Screenshot_01.png)
 ![Demo Screenshot](Showcase/Screenshot_02.png)
 
-
 ---
 
 ## 🗺️ Roadmap

@@ -111,6 +111,10 @@ urlpatterns = [
     path("staff/fcmtoken/", staff_views.staff_fcmtoken, name='staff_fcmtoken'),
     path("staff/view/notification/", staff_views.staff_view_notification,
          name="staff_view_notification"),
+    path("staff/notify_student/", staff_views.staff_notify_student,
+         name='staff_notify_student'),
+    path("staff/send_student_notification/", staff_views.staff_send_student_notification,
+         name='staff_send_student_notification'),
     path("staff/result/add/", staff_views.staff_add_result, name='staff_add_result'),
     path("staff/result/edit/", EditResultView.as_view(),
          name='edit_student_result'),
@@ -138,6 +142,8 @@ urlpatterns = [
 
     path("student/view/notification/", student_views.student_view_notification,
          name="student_view_notification"),
+    path("student/notification/mark_read/", student_views.mark_notification_read,
+         name='mark_notification_read'),
     path('student/view/result/', student_views.student_view_result,
          name='student_view_result'),
 

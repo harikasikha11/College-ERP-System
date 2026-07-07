@@ -197,6 +197,20 @@ def student_view_notification(request):
     return render(request, "student_template/student_view_notification.html", context)
 
 
+@csrf_exempt
+def mark_notification_read(request):
+    if request.method == 'POST':
+        notif_id = request.POST.get('notification_id')
+        try:
+            notification = get_object_or_404(NotificationStudent, id=notif_id, student__admin=request.user)
+            notification.is_read = True
+            notification.save()
+            return HttpResponse('OK')
+        except Exception:
+            return HttpResponse('False')
+    return HttpResponse('False')
+
+
 def student_view_result(request):
     student = get_object_or_404(Student, admin=request.user)
     results = StudentResult.objects.filter(student=student)

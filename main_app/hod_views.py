@@ -630,29 +630,42 @@ def admin_notify_student(request):
 
 @csrf_exempt
 def send_student_notification(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=405)
+
     id = request.POST.get('id')
     message = request.POST.get('message')
+    if not id or not message or message.strip() == "":
+        return JsonResponse({'success': False, 'message': 'Student and message are required.'})
+
     student = get_object_or_404(Student, admin_id=id)
     try:
-        url = "https://fcm.googleapis.com/fcm/send"
-        body = {
-            'notification': {
-                'title': "Student Management System",
-                'body': message,
-                'click_action': reverse('student_view_notification'),
-                'icon': static('dist/img/AdminLTELogo.png')
-            },
-            'to': student.admin.fcm_token
-        }
-        headers = {'Authorization':
-                   'key=AAAA3Bm8j_M:APA91bElZlOLetwV696SoEtgzpJr2qbxBfxVBfDWFiopBWzfCfzQp2nRyC7_A2mlukZEHV4g1AmyC6P_HonvSkY2YyliKt5tT3fe_1lrKod2Daigzhb2xnYQMxUWjCAIQcUexAMPZePB',
-                   'Content-Type': 'application/json'}
-        data = requests.post(url, data=json.dumps(body), headers=headers)
         notification = NotificationStudent(student=student, message=message)
         notification.save()
-        return HttpResponse("True")
-    except Exception as e:
-        return HttpResponse("False")
+    except Exception:
+        return JsonResponse({'success': False, 'message': 'Unable to save notification.'})
+
+    try:
+        if student.admin.fcm_token:
+            url = "https://fcm.googleapis.com/fcm/send"
+            body = {
+                'notification': {
+                    'title': "Student Management System",
+                    'body': message,
+                    'click_action': reverse('student_view_notification'),
+                    'icon': static('dist/img/AdminLTELogo.png')
+                },
+                'to': student.admin.fcm_token
+            }
+            headers = {
+                'Authorization': 'key=AAAA3Bm8j_M:APA91bElZlOLetwV696SoEtgzpJr2qbxBfxVBfDWFiopBWzfCfzQp2nRyC7_A2mlukZEHV4g1AmyC6P_HonvSkY2YyliKt5tT3fe_1lrKod2Daigzhb2xnYQMxUWjCAIQcUexAMPZePB',
+                'Content-Type': 'application/json'
+            }
+            requests.post(url, json=body, headers=headers, timeout=5)
+    except Exception:
+        pass
+
+    return JsonResponse({'success': True, 'message': 'Notification sent successfully.'})
 
 
 @csrf_exempt

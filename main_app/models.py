@@ -187,8 +187,40 @@ class NotificationStaff(models.Model):
 class NotificationStudent(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     message = models.TextField()
+    link = models.URLField(blank=True, null=True)
+    attachment = models.FileField(upload_to='notifications/', blank=True, null=True)
+    is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Notification(models.Model):
+    """A notification sent by a staff member.
+    It can be subject-linked or sent directly to selected students.
+    """
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE, null=True, blank=True)
+    title = models.CharField(max_length=200, blank=True)
+    message = models.TextField()
+    link = models.URLField(blank=True, null=True)
+    attachment = models.FileField(upload_to='notifications/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        creating = self.pk is None
+        super(Notification, self).save(*args, **kwargs)
+        if creating and self.subject is not None:
+            students = Student.objects.filter(course=self.subject.course)
+            for student in students:
+                ns = NotificationStudent(
+                    student=student,
+                    message=(self.title + "\n" + self.message) if self.title else self.message,
+                    link=self.link,
+                )
+                if self.attachment:
+                    ns.attachment.name = self.attachment.name
+                ns.save()
 
 
 class StudentResult(models.Model):

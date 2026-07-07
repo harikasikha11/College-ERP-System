@@ -31,10 +31,25 @@
                       <th>Message</th>
                   </tr>
                   {% for notification in  notifications %}
-                    <tr>
+                    <tr {% if not notification.is_read %}class="table-warning"{% endif %}>
                         <td>{{forloop.counter}}</td>
                         <td>{{notification.created_at}}</td>
-                        <td>{{notification.message}}</td>
+                        <td>
+                            <div>{{notification.message|linebreaksbr}}</div>
+                            {% if notification.link %}
+                                <div><a href="{{notification.link}}" target="_blank">Open Link</a></div>
+                            {% endif %}
+                            {% if notification.attachment %}
+                                <div><a href="{{ notification.attachment.url }}" target="_blank">Download Attachment</a></div>
+                            {% endif %}
+                            {% if not notification.is_read %}
+                                <form method="post" action="{% url 'mark_notification_read' %}" style="display:inline; margin-top:6px;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="notification_id" value="{{ notification.id }}" />
+                                    <button class="btn btn-sm btn-success">Mark as read</button>
+                                </form>
+                            {% endif %}
+                        </td>
                     </tr>
                   {% endfor %}
               </table>

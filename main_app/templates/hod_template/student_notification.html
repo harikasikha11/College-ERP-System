@@ -122,28 +122,26 @@
       })
     function sendNotification(id,message){
         $.ajax({
-            url: "{% url 'send_student_notification' %}",
+            url: "{% if request.user.user_type == '2' %}{% url 'staff_send_student_notification' %}{% else %}{% url 'send_student_notification' %}{% endif %}",
             type: 'POST',
+            dataType: 'json',
             headers: {
                 'X-CSRFToken': csrftoken
             },
+
             data: {
                 id: id,
                 message:message
             }
         }).done(function (response) {
-           
-                
-            if (response == 'True'){
+            if (response && response.success) {
                 alert("Notification Sent");
                 location.reload();
-              }else{
-                alert("Notification could not be saved. Please try again.");
-              }
-               
-           
-        }).fail(function (response) {
-            alert("Error in sending notification")
+            } else {
+                alert(response && response.message ? response.message : "Notification could not be saved. Please try again.");
+            }
+        }).fail(function (xhr, status, error) {
+            alert("Error in sending notification: " + (error || status));
         })
 
     }

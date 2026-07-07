@@ -191,6 +191,24 @@ class EditResultForm(FormSettings):
         model = StudentResult
         fields = ['session_year', 'subject', 'student', 'test', 'exam']
 
+
+class StaffNotificationForm(FormSettings):
+    students = forms.ModelMultipleChoiceField(
+        queryset=Student.objects.none(),
+        required=True,
+        widget=forms.SelectMultiple(attrs={'class': 'form-control', 'size': 10})
+    )
+    title = forms.CharField(required=False)
+    message = forms.CharField(widget=forms.Textarea, required=True)
+    link = forms.URLField(required=False)
+    attachment = forms.FileField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        staff = kwargs.pop('staff', None)
+        super(StaffNotificationForm, self).__init__(*args, **kwargs)
+        if staff is not None:
+            self.fields['students'].queryset = Student.objects.filter(course=staff.course)
+
 #todos
 # class TodoForm(forms.ModelForm):
 #     class Meta:

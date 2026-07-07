@@ -1,16 +1,19 @@
 import json
+import requests
 
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import (HttpResponseRedirect, get_object_or_404,redirect, render)
+from django.shortcuts import (HttpResponseRedirect, get_object_or_404, redirect, render)
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.templatetags.static import static
 
 from .forms import *
 from .models import *
 from . import forms, models
 from datetime import date
+from django.views.decorators.http import require_http_methods
 
 def staff_home(request):
     staff = get_object_or_404(Staff, admin=request.user)
@@ -252,6 +255,55 @@ def staff_view_notification(request):
         'page_title': "View Notifications"
     }
     return render(request, "staff_template/staff_view_notification.html", context)
+
+
+@csrf_exempt
+def staff_send_student_notification(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'}, status=405)
+
+    id = request.POST.get('id')
+    message = request.POST.get('message')
+    if not id or not message or message.strip() == "":
+        return JsonResponse({'success': False, 'message': 'Student and message are required.'})
+
+    student = get_object_or_404(Student, admin_id=id)
+    try:
+        notification = NotificationStudent(student=student, message=message)
+        notification.save()
+    except Exception:
+        return JsonResponse({'success': False, 'message': 'Unable to save notification.'})
+
+    try:
+        if student.admin.fcm_token:
+            url = "https://fcm.googleapis.com/fcm/send"
+            body = {
+                'notification': {
+                    'title': "Student Management System",
+                    'body': message,
+                    'click_action': reverse('student_view_notification'),
+                    'icon': static('dist/img/AdminLTELogo.png')
+                },
+                'to': student.admin.fcm_token
+            }
+            headers = {
+                'Authorization': 'key=AAAA3Bm8j_M:APA91bElZlOLetwV696SoEtgzpJr2qbxBfxVBfDWFiopBWzfCfzQp2nRyC7_A2mlukZEHV4g1AmyC6P_HonvSkY2YyliKt5tT3fe_1lrKod2Daigzhb2xnYQMxUWjCAIQcUexAMPZePB',
+                'Content-Type': 'application/json'
+            }
+            requests.post(url, json=body, headers=headers, timeout=5)
+    except Exception:
+        pass
+
+    return JsonResponse({'success': True, 'message': 'Notification sent successfully.'})
+
+
+def staff_notify_student(request):
+    students = CustomUser.objects.filter(user_type=3)
+    context = {
+        'page_title': "Send Notifications To Students",
+        'students': students
+    }
+    return render(request, "hod_template/student_notification.html", context)
 
 
 def staff_add_result(request):
