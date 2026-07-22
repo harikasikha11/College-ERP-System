@@ -1,19 +1,6 @@
-<<<<<<< HEAD
 <div align="center">
 
 # 🎓 College ERP System
-
-### Enterprise Resource Planning Solution for Educational Institutions
-
-[![Stars](https://img.shields.io/github/stars/Ansarimajid/College-ERP?style=for-the-badge&logo=github)](https://github.com/Ansarimajid/College-ERP)
-[![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python)](https://www.python.org/)
-[![Django](https://img.shields.io/badge/Django-Framework-green?style=for-the-badge&logo=django)](https://www.djangoproject.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
-
-[Live Demo](https://syncx.pythonanywhere.com) • [Report Bug](https://github.com/Ansarimajid/College-ERP/issues) • [Request Feature](https://github.com/Ansarimajid/College-ERP/issues)
-
-</div>
-
 ---
 
 ## 📋 Table of Contents
@@ -273,40 +260,3 @@ If you find this project helpful, please consider:
 - 📢 **Share** with fellow developers
 - 👨‍💻 **Contribute** to the codebase
 
-### Connect with the Developer
-
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?style=for-the-badge&logo=github)](https://github.com/Ansarimajid)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/ansmajidali)
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Contact & Support
-
-Having issues? Need help?
-
-- 📧 **Email:** [ansmajidali@gmail.com](mailto:ansmajidali@gmail.com)
-- 🐛 **Issues:** [GitHub Issues](https://github.com/Ansarimajid/College-ERP/issues)
-- 💬 **Discussions:** [GitHub Discussions](https://github.com/Ansarimajid/College-ERP/discussions)
-
----
-
-<div align="center">
-
-### ⭐ Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Ansarimajid/College-ERP&type=Date)](https://star-history.com/#Ansarimajid/College-ERP&Date)
-
-**Made with ❤️ by [Ansari Majid](https://github.com/Ansarimajid)**
-
-*If this project helped you, consider giving it a star! ⭐*
-
-</div>
-=======
-# College-Management-System-ERP-
->>>>>>> 681cd2353d198cd10e720e033be217adc6cbc7a9
