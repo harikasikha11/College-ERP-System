@@ -119,7 +119,7 @@ Ensure you have the following installed:
 #### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/Ansarimajid/College-ERP.git
+git clone https://github.com/harikasikha11/College ERP System.git
 cd College-ERP
 ```
 
